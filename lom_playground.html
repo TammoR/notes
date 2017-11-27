@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>lom_playground</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      div.line-block{white-space: pre-line;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <style type="text/css">
+div.sourceLine, a.sourceLine { display: inline-block; min-height: 1.25em; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; }
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+div.sourceLine, a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource div.sourceLine, .numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource div.sourceLine::before, .numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em; }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; color: #aaaaaa;  padding-left: 4px; }
+@media screen {
+a.sourceLine::before { text-decoration: underline; color: initial; }
+}
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.bn { color: #40a070; } /* BaseN */
+code span.fl { color: #40a070; } /* Float */
+code span.ch { color: #4070a0; } /* Char */
+code span.st { color: #4070a0; } /* String */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.ot { color: #007020; } /* Other */
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.fu { color: #06287e; } /* Function */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code span.cn { color: #880000; } /* Constant */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.im { } /* Import */
+code span.va { color: #19177c; } /* Variable */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.op { color: #666666; } /* Operator */
+code span.bu { } /* BuiltIn */
+code span.ex { } /* Extension */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.at { color: #7d9029; } /* Attribute */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  </style>
+  <link rel="stylesheet" href="/Users/trukat/bin/md_html.css">
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<nav id="TOC">
+<ul>
+<li><a href="#reinstall-package-and-run-tests">Reinstall package and run tests</a></li>
+<li><a href="#generate-some-3d-data-with-simple-structure">Generate some 3D data with simple structure</a></li>
+<li><a href="#specify-model-and-run-inference">Specify model and run inference</a></li>
+</ul>
+</nav>
+<pre class="sourceCode python" id="cb1"><code class="sourceCode python"><div class="sourceLine" id="cb1-1" data-line-number="1"><span class="op">%</span>matplotlib inline</div>
+<div class="sourceLine" id="cb1-2" data-line-number="2"><span class="op">%</span>load_ext autoreload</div>
+<div class="sourceLine" id="cb1-3" data-line-number="3"><span class="op">%</span>autoreload <span class="dv">2</span></div>
+<div class="sourceLine" id="cb1-4" data-line-number="4"><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</div>
+<div class="sourceLine" id="cb1-5" data-line-number="5"><span class="im">import</span> numpy <span class="im">as</span> np</div>
+<div class="sourceLine" id="cb1-6" data-line-number="6"><span class="im">import</span> src.lom <span class="im">as</span> lom</div>
+<div class="sourceLine" id="cb1-7" data-line-number="7"><span class="im">import</span> pandas <span class="im">as</span> pd3</div>
+<div class="sourceLine" id="cb1-8" data-line-number="8"><span class="im">import</span> seaborn <span class="im">as</span> sns</div>
+<div class="sourceLine" id="cb1-9" data-line-number="9"><span class="im">from</span> scipy.special <span class="im">import</span> expit, logit</div>
+<div class="sourceLine" id="cb1-10" data-line-number="10"><span class="im">from</span> importlib <span class="im">import</span> <span class="bu">reload</span></div>
+<div class="sourceLine" id="cb1-11" data-line-number="11"><span class="im">import</span> src.lib <span class="im">as</span> lib</div></code></pre>
+<pre><code>The autoreload extension is already loaded. To reload it, use:
+  %reload_ext autoreload</code></pre>
+<h3 id="reinstall-package-and-run-tests">Reinstall package and run tests</h3>
+<pre class="sourceCode bash" id="cb3"><code class="sourceCode bash"><div class="sourceLine" id="cb3-1" data-line-number="1"><span class="ex">%%bash</span></div>
+<div class="sourceLine" id="cb3-2" data-line-number="2"><span class="bu">cd</span> ~/dphil_projects/modules/lom/</div>
+<div class="sourceLine" id="cb3-3" data-line-number="3"><span class="ex">pip</span> install -e .</div>
+<div class="sourceLine" id="cb3-4" data-line-number="4"><span class="ex">py.test</span></div></code></pre>
+<pre><code>Obtaining file:///Users/trukat/dphil_projects/modules/lom
+Requirement already satisfied: numpy in /Users/trukat/.virtualenvs/lopm3/lib/python3.6/site-packages (from LogicalOperatorMachines==0.1)
+Requirement already satisfied: Cython in /Users/trukat/.virtualenvs/lopm3/lib/python3.6/site-packages (from LogicalOperatorMachines==0.1)
+Installing collected packages: LogicalOperatorMachines
+  Found existing installation: LogicalOperatorMachines 0.1
+    Uninstalling LogicalOperatorMachines-0.1:
+      Successfully uninstalled LogicalOperatorMachines-0.1
+  Running setup.py develop for LogicalOperatorMachines
+Successfully installed LogicalOperatorMachines
+============================= test session starts ==============================
+platform darwin -- Python 3.6.3, pytest-3.2.5, py-1.5.2, pluggy-0.4.0
+rootdir: /Users/trukat/dphil_projects/modules/lom, inifile:
+collected 2 items
+
+tests/test_lom.py ..
+
+=========================== 2 passed in 1.01 seconds ===========================</code></pre>
+<h3 id="generate-some-3d-data-with-simple-structure">Generate some 3D data with simple structure</h3>
+<p>The matrix has 3 slices, with 4 rows and 5 columns each.</p>
+<pre class="sourceCode python" id="cb5"><code class="sourceCode python"><div class="sourceLine" id="cb5-1" data-line-number="1">tensor <span class="op">=</span> np.zeros([<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>])</div>
+<div class="sourceLine" id="cb5-2" data-line-number="2"></div>
+<div class="sourceLine" id="cb5-3" data-line-number="3"><span class="cf">for</span> i <span class="kw">in</span> [<span class="dv">0</span>]: <span class="co">#slice</span></div>
+<div class="sourceLine" id="cb5-4" data-line-number="4">    <span class="cf">for</span> j <span class="kw">in</span> [<span class="dv">0</span>,<span class="dv">1</span>]: <span class="co">#rows</span></div>
+<div class="sourceLine" id="cb5-5" data-line-number="5">        <span class="cf">for</span> k <span class="kw">in</span> [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>]: <span class="co"># columns</span></div>
+<div class="sourceLine" id="cb5-6" data-line-number="6">            tensor[i,j,k] <span class="op">=</span> <span class="dv">1</span></div>
+<div class="sourceLine" id="cb5-7" data-line-number="7">            </div>
+<div class="sourceLine" id="cb5-8" data-line-number="8"><span class="cf">for</span> i <span class="kw">in</span> [<span class="dv">1</span>]:</div>
+<div class="sourceLine" id="cb5-9" data-line-number="9">    <span class="cf">for</span> j <span class="kw">in</span> [<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>]:</div>
+<div class="sourceLine" id="cb5-10" data-line-number="10">        <span class="cf">for</span> k <span class="kw">in</span> [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>]:</div>
+<div class="sourceLine" id="cb5-11" data-line-number="11">            tensor[i,j,k] <span class="op">=</span> <span class="dv">1</span></div>
+<div class="sourceLine" id="cb5-12" data-line-number="12"> </div>
+<div class="sourceLine" id="cb5-13" data-line-number="13"><span class="cf">for</span> i <span class="kw">in</span> [<span class="dv">2</span>]:</div>
+<div class="sourceLine" id="cb5-14" data-line-number="14">    <span class="cf">for</span> j <span class="kw">in</span> [<span class="dv">0</span>,<span class="dv">1</span>]:</div>
+<div class="sourceLine" id="cb5-15" data-line-number="15">        <span class="cf">for</span> k <span class="kw">in</span> [<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>]:</div>
+<div class="sourceLine" id="cb5-16" data-line-number="16">            tensor[i,j,k] <span class="op">=</span> <span class="dv">1</span></div>
+<div class="sourceLine" id="cb5-17" data-line-number="17">            </div>
+<div class="sourceLine" id="cb5-18" data-line-number="18">tensor <span class="op">=</span> <span class="dv">2</span><span class="op">*</span>np.array(tensor,dtype<span class="op">=</span>np.int8)<span class="op">-</span><span class="dv">1</span></div>
+<div class="sourceLine" id="cb5-19" data-line-number="19">tensor</div></code></pre>
+<pre><code>array([[[-1,  1,  1,  1, -1],
+        [-1,  1,  1,  1, -1],
+        [-1, -1, -1, -1, -1],
+        [-1, -1, -1, -1, -1]],
+
+       [[-1,  1,  1,  1, -1],
+        [-1,  1,  1,  1, -1],
+        [-1,  1,  1,  1, -1],
+        [-1,  1,  1,  1, -1]],
+
+       [[ 1,  1,  1,  1,  1],
+        [ 1,  1,  1,  1,  1],
+        [-1, -1, -1, -1, -1],
+        [-1, -1, -1, -1, -1]]], dtype=int8)</code></pre>
+<h3 id="specify-model-and-run-inference">Specify model and run inference</h3>
+<pre class="sourceCode python" id="cb7"><code class="sourceCode python"><div class="sourceLine" id="cb7-1" data-line-number="1">orm <span class="op">=</span> lom.Machine()</div>
+<div class="sourceLine" id="cb7-2" data-line-number="2">data <span class="op">=</span> orm.add_matrix(tensor, sampling_indicator<span class="op">=</span><span class="va">False</span>)</div>
+<div class="sourceLine" id="cb7-3" data-line-number="3">layer <span class="op">=</span> orm.add_tensorm_layer(child<span class="op">=</span>data, size<span class="op">=</span><span class="dv">2</span>)</div>
+<div class="sourceLine" id="cb7-4" data-line-number="4"></div>
+<div class="sourceLine" id="cb7-5" data-line-number="5"><span class="co"># assign the correct updating functions</span></div>
+<div class="sourceLine" id="cb7-6" data-line-number="6"><span class="cf">for</span> factor_matrix <span class="kw">in</span> data.parents:</div>
+<div class="sourceLine" id="cb7-7" data-line-number="7">    factor_matrix.sampling_fct <span class="op">=</span> wrappers.draw_tensorm_noparents_onechild_wrapper</div>
+<div class="sourceLine" id="cb7-8" data-line-number="8">layer.lbda.sampling_fct <span class="op">=</span> sampling.draw_lbda_tensorm</div>
+<div class="sourceLine" id="cb7-9" data-line-number="9"></div>
+<div class="sourceLine" id="cb7-10" data-line-number="10">orm.infer(burn_in_min<span class="op">=</span><span class="dv">100</span>)</div></code></pre>
+<pre><code>burning in markov chain...
+    iteration: 140 recon acc.: 0.919
+    converged at reconstr. accuracy: 0.919
+allocating memory to save samples...
+drawing samples...
+    iteration 50; recon acc.: 0.919
+finished.</code></pre>
+<pre class="sourceCode python" id="cb9"><code class="sourceCode python"><div class="sourceLine" id="cb9-1" data-line-number="1">fig, ax <span class="op">=</span> lib.plot_matrix(layer.z.mean(), figsize<span class="op">=</span>(<span class="dv">4</span>,<span class="dv">4</span>))</div>
+<div class="sourceLine" id="cb9-2" data-line-number="2">ax.set_title(<span class="st">&#39;Slice variable&#39;</span>)</div>
+<div class="sourceLine" id="cb9-3" data-line-number="3">fig, ax <span class="op">=</span> lib.plot_matrix(layer.u.mean(), figsize<span class="op">=</span>(<span class="dv">4</span>,<span class="dv">4</span>))</div>
+<div class="sourceLine" id="cb9-4" data-line-number="4">ax.set_title(<span class="st">&#39;Row variable&#39;</span>)</div>
+<div class="sourceLine" id="cb9-5" data-line-number="5">fig, ax <span class="op">=</span> lib.plot_matrix(layer.v.mean(), figsize<span class="op">=</span>(<span class="dv">4</span>,<span class="dv">4</span>))</div>
+<div class="sourceLine" id="cb9-6" data-line-number="6">ax.set_title(<span class="st">&#39;Column variable&#39;</span>)</div></code></pre>
+<pre><code>rescaling matrix to probabilities
+rescaling matrix to probabilities
+rescaling matrix to probabilities
+
+
+
+
+
+Text(0.5,1,&#39;Column variable&#39;)</code></pre>
+<figure>
+<img src="output_7_2.png" alt="png" /><figcaption>png</figcaption>
+</figure>
+<figure>
+<img src="output_7_3.png" alt="png" /><figcaption>png</figcaption>
+</figure>
+<figure>
+<img src="output_7_4.png" alt="png" /><figcaption>png</figcaption>
+</figure>
+<pre class="sourceCode python" id="cb11"><code class="sourceCode python"><div class="sourceLine" id="cb11-1" data-line-number="1"><span class="co">## Repeat for 3 latent dimensions</span></div>
+<div class="sourceLine" id="cb11-2" data-line-number="2"></div>
+<div class="sourceLine" id="cb11-3" data-line-number="3">orm <span class="op">=</span> lom.Machine()</div>
+<div class="sourceLine" id="cb11-4" data-line-number="4">data <span class="op">=</span> orm.add_matrix(tensor, sampling_indicator<span class="op">=</span><span class="va">False</span>)</div>
+<div class="sourceLine" id="cb11-5" data-line-number="5">layer <span class="op">=</span> orm.add_tensorm_layer(child<span class="op">=</span>data, size<span class="op">=</span><span class="dv">3</span>)</div>
+<div class="sourceLine" id="cb11-6" data-line-number="6"></div>
+<div class="sourceLine" id="cb11-7" data-line-number="7"><span class="co"># assign the correct updating functions</span></div>
+<div class="sourceLine" id="cb11-8" data-line-number="8"><span class="cf">for</span> factor_matrix <span class="kw">in</span> data.parents:</div>
+<div class="sourceLine" id="cb11-9" data-line-number="9">    factor_matrix.sampling_fct <span class="op">=</span> wrappers.draw_tensorm_noparents_onechild_wrapper</div>
+<div class="sourceLine" id="cb11-10" data-line-number="10">layer.lbda.sampling_fct <span class="op">=</span> sampling.draw_lbda_tensorm</div>
+<div class="sourceLine" id="cb11-11" data-line-number="11"></div>
+<div class="sourceLine" id="cb11-12" data-line-number="12">orm.infer(burn_in_min<span class="op">=</span><span class="dv">100</span>)</div>
+<div class="sourceLine" id="cb11-13" data-line-number="13"></div>
+<div class="sourceLine" id="cb11-14" data-line-number="14">fig, ax <span class="op">=</span> lib.plot_matrix(layer.z.mean(), figsize<span class="op">=</span>(<span class="dv">4</span>,<span class="dv">4</span>))</div>
+<div class="sourceLine" id="cb11-15" data-line-number="15">ax.set_title(<span class="st">&#39;Slice variable&#39;</span>)</div>
+<div class="sourceLine" id="cb11-16" data-line-number="16">fig, ax <span class="op">=</span> lib.plot_matrix(layer.u.mean(), figsize<span class="op">=</span>(<span class="dv">4</span>,<span class="dv">4</span>))</div>
+<div class="sourceLine" id="cb11-17" data-line-number="17">ax.set_title(<span class="st">&#39;Row variable&#39;</span>)</div>
+<div class="sourceLine" id="cb11-18" data-line-number="18">fig, ax <span class="op">=</span> lib.plot_matrix(layer.v.mean(), figsize<span class="op">=</span>(<span class="dv">4</span>,<span class="dv">4</span>))</div>
+<div class="sourceLine" id="cb11-19" data-line-number="19">ax.set_title(<span class="st">&#39;Column variable&#39;</span>)</div></code></pre>
+<pre><code>burning in markov chain...
+    iteration: 130 recon acc.: 0.984
+    converged at reconstr. accuracy: 0.984
+allocating memory to save samples...
+drawing samples...
+    iteration 50; recon acc.: 0.984
+finished.
+rescaling matrix to probabilities
+rescaling matrix to probabilities
+rescaling matrix to probabilities
+
+
+
+
+
+Text(0.5,1,&#39;Column variable&#39;)</code></pre>
+<figure>
+<img src="output_8_2.png" alt="png" /><figcaption>png</figcaption>
+</figure>
+<figure>
+<img src="output_8_3.png" alt="png" /><figcaption>png</figcaption>
+</figure>
+<figure>
+<img src="output_8_4.png" alt="png" /><figcaption>png</figcaption>
+</figure>
+<p>Note, we don’t get lbda=1, because we use Laplace rule of succession when computing the MAP update.</p>
+</body>
+</html>
